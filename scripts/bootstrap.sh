@@ -2,7 +2,7 @@ set -e
 
 ENV=$1
 LOCATION=$2
-APP_NAME="vmssadoinfra"
+APP_NAME="akscanary"
 
 if [ -z "$ENV" ] || [ -z "$LOCATION" ]; then
   echo "Usage: ./scripts/bootstrap.sh <environment> <location>"

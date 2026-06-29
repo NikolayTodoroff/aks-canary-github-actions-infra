@@ -34,5 +34,16 @@ module "aks" {
   dns_prefix             = local.prefix
   vnet_subnet_id         = module.networking.aks_subnet_id
   admin_group_object_ids = [var.aks_admin_group_object_id]
+  log_analytics_workspace_id = module.monitoring.log_analytics_workspace_id
   tags                   = local.common_tags
 }
+
+module "monitoring" {
+  source = "../modules/monitoring"
+
+  prefix              = local.prefix
+  location            = var.location
+  resource_group_name = azurerm_resource_group.rg_main.name
+  tags                = local.common_tags
+}
+
