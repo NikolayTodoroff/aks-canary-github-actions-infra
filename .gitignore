@@ -24,3 +24,5 @@ local.settings.json
 *.funcignore
 *.user
 *.suo
+
+helm/voting-app/charts/*.tgz
