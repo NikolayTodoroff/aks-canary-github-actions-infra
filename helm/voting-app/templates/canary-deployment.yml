@@ -1,0 +1,55 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: voting-app-canary
+  namespace: {{ .Values.namespace }}
+  labels:
+    app: voting-app
+    track: canary
+spec:
+  replicas: {{ .Values.canary.replicaCount }}
+  selector:
+    matchLabels:
+      app: voting-app
+      track: canary
+  template:
+    metadata:
+      labels:
+        app: voting-app
+        track: canary
+    spec:
+      nodeSelector:
+        nodepool-type: user
+      containers:
+        - name: voting-app
+          image: {{ .Values.canary.image.repository }}:{{ .Values.canary.image.tag }}
+          ports:
+            - containerPort: 80
+          env:
+            - name: REDIS
+              value: {{ .Values.redis.host | quote }}
+            - name: REDIS_PWD
+              value: {{ .Values.redis.password | quote }}
+            - name: VERSION
+              value: {{ .Values.canary.version | quote }}  
+          resources:
+            requests:
+              cpu: {{ .Values.canary.resources.requests.cpu }}
+              memory: {{ .Values.canary.resources.requests.memory }}
+            limits:
+              cpu: {{ .Values.canary.resources.limits.cpu }}
+              memory: {{ .Values.canary.resources.limits.memory }}
+          readinessProbe:
+            httpGet:
+              path: /
+              port: 80
+            initialDelaySeconds: 10
+            periodSeconds: 5
+            failureThreshold: 3
+          livenessProbe:
+            httpGet:
+              path: /
+              port: 80
+            initialDelaySeconds: 15
+            periodSeconds: 10
+            failureThreshold: 3
