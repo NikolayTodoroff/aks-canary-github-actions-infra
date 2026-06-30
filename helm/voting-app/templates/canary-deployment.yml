@@ -23,6 +23,7 @@ spec:
       containers:
         - name: voting-app
           image: {{ .Values.canary.image.repository }}:{{ .Values.canary.image.tag }}
+          imagePullPolicy: Always
           ports:
             - containerPort: 80
           env:

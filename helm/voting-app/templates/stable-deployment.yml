@@ -23,6 +23,7 @@ spec:
       containers:
         - name: voting-app
           image: {{ .Values.stable.image.repository }}:{{ .Values.stable.image.tag }}
+          imagePullPolicy: Always
           ports:
             - containerPort: 80
           env:

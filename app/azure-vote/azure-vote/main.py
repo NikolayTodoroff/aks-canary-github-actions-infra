@@ -7,7 +7,6 @@ import sys
 
 app = Flask(__name__)
 version = os.environ.get('VERSION', 'unknown')
-return render_template('index.html', cats=cats, dogs=dogs, version=version)
 
 # Load configurations from environment or config file
 app.config.from_pyfile('config_file.cfg')
@@ -60,7 +59,7 @@ def index():
         vote2 = r.get(button2).decode('utf-8')            
 
         # Return index with values
-        return render_template("index.html", value1=int(vote1), value2=int(vote2), button1=button1, button2=button2, title=title)
+        return render_template("index.html", value1=int(vote1), value2=int(vote2), button1=button1, button2=button2, title=title, version=version)
 
     elif request.method == 'POST':
 
@@ -71,7 +70,7 @@ def index():
             r.set(button2,0)
             vote1 = r.get(button1).decode('utf-8')
             vote2 = r.get(button2).decode('utf-8')
-            return render_template("index.html", value1=int(vote1), value2=int(vote2), button1=button1, button2=button2, title=title)
+            return render_template("index.html", value1=int(vote1), value2=int(vote2), button1=button1, button2=button2, title=title, version=version)
         
         else:
 
@@ -84,7 +83,7 @@ def index():
             vote2 = r.get(button2).decode('utf-8')  
                 
             # Return results
-            return render_template("index.html", value1=int(vote1), value2=int(vote2), button1=button1, button2=button2, title=title)
+            return render_template("index.html", value1=int(vote1), value2=int(vote2), button1=button1, button2=button2, title=title, version=version)
 
 if __name__ == "__main__":
     app.run()
