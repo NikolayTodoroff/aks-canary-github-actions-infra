@@ -1,0 +1,21 @@
+Voting app deployed successfully.
+
+Release:    {{ .Release.Name }}
+Namespace:  {{ .Values.namespace }}
+
+Stable replicas: {{ .Values.stable.replicaCount }}
+Canary replicas: {{ .Values.canary.replicaCount }}
+
+To check rollout status:
+  kubectl get pods -n {{ .Values.namespace }} -l app=voting-app
+
+To get the external IP:
+  kubectl get ingress voting-ingress -n {{ .Values.namespace }}
+
+To promote the canary to stable:
+  1. Update values-{{ .Values.environment | default "dev" }}.yml — set stable.image.tag to the canary's image tag
+  2. Set canary.replicaCount to 0
+  3. Run: helm upgrade --install voting-app helm/voting-app --values ...
+
+To roll back a failed canary:
+  Set canary.replicaCount to 0 and re-run helm upgrade — all traffic returns to stable immediately.
