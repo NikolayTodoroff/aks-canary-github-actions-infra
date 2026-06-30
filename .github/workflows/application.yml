@@ -1,0 +1,81 @@
+name: Build and Deploy
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'app/**'
+      - 'helm/**'
+  workflow_dispatch:
+    inputs:
+      deploy_prod:
+        description: 'Deploy to production after dev succeeds'
+        type: boolean
+        default: false
+
+permissions:
+  id-token: write
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    outputs:
+      image-tag: ${{ steps.set-tag.outputs.tag }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set image tag
+        id: set-tag
+        run: echo "tag=${{ github.sha }}" >> "$GITHUB_OUTPUT"
+
+      - name: Azure Login (OIDC)
+        uses: azure/login@v2
+        with:
+          client-id: ${{ secrets.AZURE_CLIENT_ID }}
+          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+
+      - name: ACR Login (dev)
+        run: az acr login --name acrakscanarydev
+
+      - name: ACR Login (prod)
+        run: az acr login --name acrakscanaryprod
+
+      - name: Build image
+        run: docker build -t azure-vote-front:${{ github.sha }} ./app/azure-vote/azure-vote
+
+      - name: Tag and push to dev ACR
+        run: |
+          docker tag azure-vote-front:${{ github.sha }} acrakscanarydev.azurecr.io/azure-vote-front:${{ github.sha }}
+          docker push acrakscanarydev.azurecr.io/azure-vote-front:${{ github.sha }}
+
+      - name: Tag and push to prod ACR
+        run: |
+          docker tag azure-vote-front:${{ github.sha }} acrakscanaryprod.azurecr.io/azure-vote-front:${{ github.sha }}
+          docker push acrakscanaryprod.azurecr.io/azure-vote-front:${{ github.sha }}
+
+  deploy-dev:
+    needs: build
+    uses: ./.github/workflows/reusable-deploy.yml
+    with:
+      environment: dev
+      image-repository: acrakscanarydev.azurecr.io/azure-vote-front
+      image-tag: ${{ needs.build.outputs.image-tag }}
+      deployment-track: stable
+    secrets:
+      inherit
+
+  deploy-prod:
+    needs: [build, deploy-dev]
+    if: github.event.inputs.deploy_prod == 'true'
+    uses: ./.github/workflows/reusable-deploy.yml
+    with:
+      environment: prod
+      image-repository: acrakscanaryprod.azurecr.io/azure-vote-front
+      image-tag: ${{ needs.build.outputs.image-tag }}
+      deployment-track: canary
+    secrets:
+      inherit 

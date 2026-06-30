@@ -6,9 +6,16 @@ on:
       environment:
         required: true
         type: string
+      image-repository:
+        required: true
+        type: string  
       image-tag:
         required: true
         type: string
+      deployment-track:
+        required: true
+        type: string
+          
     secrets:
       AZURE_CLIENT_ID:
         required: true
@@ -50,13 +57,13 @@ jobs:
       - name: Helm dependency update
         run: helm dependency update helm/voting-app
 
-      - name: Helm deploy
+      - name: Helm upgrade
         run: |
           helm upgrade --install voting-app helm/voting-app \
             --values helm/voting-app/values.yml \
             --values helm/voting-app/values-${{ inputs.environment }}.yml \
-            --set stable.image.repository=acrakscanary${{ inputs.environment }}.azurecr.io/azure-vote-front \
-            --set stable.image.tag=${{ inputs.image-tag }} \
+            --set-string ${{ inputs.deployment-track }}.image.repository=${{ inputs.image-repository }} \
+            --set-string ${{ inputs.deployment-track }}.image.tag=${{ inputs.image-tag }} \
             --namespace voting \
             --create-namespace \
             --wait \
