@@ -1,0 +1,63 @@
+name: Reusable Deploy
+
+on:
+  workflow_call:
+    inputs:
+      environment:
+        required: true
+        type: string
+      image-tag:
+        required: true
+        type: string
+    secrets:
+      AZURE_CLIENT_ID:
+        required: true
+      AZURE_TENANT_ID:
+        required: true
+      AZURE_SUBSCRIPTION_ID:
+        required: true
+
+permissions:
+  id-token: write
+  contents: read
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment: ${{ inputs.environment }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Azure Login (OIDC)
+        uses: azure/login@v2
+        with:
+          client-id: ${{ secrets.AZURE_CLIENT_ID }}
+          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+
+      - name: Install kubelogin
+        run: az aks install-cli
+
+      - name: Get AKS credentials
+        run: |
+          az aks get-credentials \
+            --resource-group rg-main-akscanary-${{ inputs.environment }} \
+            --name aks-akscanary-${{ inputs.environment }} \
+            --overwrite-existing
+          kubelogin convert-kubeconfig -l azurecli
+
+      - name: Helm dependency update
+        run: helm dependency update helm/voting-app
+
+      - name: Helm deploy
+        run: |
+          helm upgrade --install voting-app helm/voting-app \
+            --values helm/voting-app/values.yml \
+            --values helm/voting-app/values-${{ inputs.environment }}.yml \
+            --set stable.image.repository=acrakscanary${{ inputs.environment }}.azurecr.io/azure-vote-front \
+            --set stable.image.tag=${{ inputs.image-tag }} \
+            --namespace voting \
+            --create-namespace \
+            --wait \
+            --timeout 10m
