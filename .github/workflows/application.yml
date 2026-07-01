@@ -48,26 +48,20 @@ jobs:
         run: |
           docker pull acrakscanarydev.azurecr.io/azure-vote-front:latest || echo "No previous cache image found"
 
-      - name: Build image with cache
+      - name: Build and push image
         run: |
-          docker build \
-            --pull \
-            --cache-from acrakscanarydev.azurecr.io/azure-vote-front:latest \
-            -t azure-vote-front:${{ github.sha }} \
-            app/
-
-      - name: Tag and push to dev ACR
-        run: |
+          docker build -t azure-vote-front:${{ github.sha }} ./app/azure-vote/azure-vote
+          
+          # Push immutable SHA tag to both ACRs
           docker tag azure-vote-front:${{ github.sha }} acrakscanarydev.azurecr.io/azure-vote-front:${{ github.sha }}
-          docker tag azure-vote-front:${{ github.sha }} acrakscanarydev.azurecr.io/azure-vote-front:latest
-
           docker push acrakscanarydev.azurecr.io/azure-vote-front:${{ github.sha }}
-          docker push acrakscanarydev.azurecr.io/azure-vote-front:latest
-
-      - name: Tag and push to prod ACR
-        run: |
+          
           docker tag azure-vote-front:${{ github.sha }} acrakscanaryprod.azurecr.io/azure-vote-front:${{ github.sha }}
           docker push acrakscanaryprod.azurecr.io/azure-vote-front:${{ github.sha }}
+          
+          # Push mutable canary tag to prod ACR
+          docker tag azure-vote-front:${{ github.sha }} acrakscanaryprod.azurecr.io/azure-vote-front:canary
+          docker push acrakscanaryprod.azurecr.io/azure-vote-front:canary
 
   deploy-dev:
     needs: build
