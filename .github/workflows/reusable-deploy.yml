@@ -15,7 +15,11 @@ on:
       deployment-track:
         required: true
         type: string
-          
+      hpa-enabled:
+        required: false
+        type: string
+        default: "false"    
+
     secrets:
       AZURE_CLIENT_ID:
         required: true
@@ -67,7 +71,8 @@ jobs:
             --values helm/voting-app/values-${{ inputs.environment }}.yml \
             --set-string ${{ inputs.deployment-track }}.image.repository=${{ inputs.image-repository }} \
             --set-string ${{ inputs.deployment-track }}.image.tag=${{ inputs.image-tag }} \
+            --set hpa.enabled=${{ inputs.hpa-enabled }} \
             --namespace voting \
             --create-namespace \
             --wait \
-            --timeout 15m
+            --timeout 10m
