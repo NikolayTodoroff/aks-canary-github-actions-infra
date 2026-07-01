@@ -70,5 +70,5 @@ jobs:
             --namespace voting \
             --create-namespace \
             --wait \
-            --timeout 3m
+            --timeout 3m \
             --cleanup-on-fail
