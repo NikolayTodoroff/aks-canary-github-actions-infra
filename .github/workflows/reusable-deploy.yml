@@ -69,6 +69,5 @@ jobs:
             --set-string ${{ inputs.deployment-track }}.image.tag=${{ inputs.image-tag }} \
             --namespace voting \
             --create-namespace \
-            --wait \
             --timeout 3m \
             --cleanup-on-fail
