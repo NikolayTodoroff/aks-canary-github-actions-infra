@@ -7,6 +7,7 @@ metadata:
     app: voting-app
     track: canary
 spec:
+  revisionHistoryLimit: 0
   replicas: {{ .Values.canary.replicaCount }}
   selector:
     matchLabels:
@@ -40,7 +41,6 @@ spec:
             limits:
               cpu: {{ .Values.canary.resources.limits.cpu }}
               memory: {{ .Values.canary.resources.limits.memory }}
-          revisionHistoryLimit: 0
           readinessProbe:
             httpGet:
               path: /

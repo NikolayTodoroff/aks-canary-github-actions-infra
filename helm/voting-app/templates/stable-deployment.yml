@@ -7,6 +7,7 @@ metadata:
     app: voting-app
     track: stable
 spec:
+  revisionHistoryLimit: 0
   replicas: {{ .Values.stable.replicaCount }}
   selector:
     matchLabels:
@@ -40,7 +41,6 @@ spec:
             limits:
               cpu: {{ .Values.stable.resources.limits.cpu }}
               memory: {{ .Values.stable.resources.limits.memory }}
-          revisionHistoryLimit: 0
           readinessProbe:
             httpGet:
               path: /
