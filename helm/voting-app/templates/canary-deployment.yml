@@ -40,6 +40,7 @@ spec:
             limits:
               cpu: {{ .Values.canary.resources.limits.cpu }}
               memory: {{ .Values.canary.resources.limits.memory }}
+          revisionHistoryLimit: 0
           readinessProbe:
             httpGet:
               path: /
