@@ -92,7 +92,7 @@ jobs:
     secrets: inherit
 
   deploy-prod-canary:
-    needs: [build, deploy-dev]
+    needs: [build, deploy-prod-stable]
     if: ${{ inputs.deploy_prod_canary }}
     uses: ./.github/workflows/reusable-deploy.yml
     with:
