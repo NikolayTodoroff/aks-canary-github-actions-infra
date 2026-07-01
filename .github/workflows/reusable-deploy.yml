@@ -71,5 +71,4 @@ jobs:
             --create-namespace \
             --wait \
             --wait-for-jobs \
-            --timeout 10m \
-            --debug
+            --timeout 3m 
