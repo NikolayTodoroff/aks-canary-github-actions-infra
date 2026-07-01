@@ -54,7 +54,7 @@ jobs:
             --pull \
             --cache-from acrakscanarydev.azurecr.io/azure-vote-front:latest \
             -t azure-vote-front:${{ github.sha }} \
-            ./app/azure-vote
+            app/
 
       - name: Tag and push to dev ACR
         run: |
