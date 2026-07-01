@@ -77,7 +77,6 @@ jobs:
       image-repository: acrakscanarydev.azurecr.io/azure-vote-front
       image-tag: ${{ needs.build.outputs.image-tag }}
       deployment-track: stable
-      hpa-enabled: "true"
     secrets:
       inherit
 
