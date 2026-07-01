@@ -47,11 +47,7 @@ jobs:
 
       - name: ACR Login (prod)
         run: az acr login --name acrakscanaryprod
-
-      - name: Pull previous image for cache
-        run: |
-          docker pull acrakscanarydev.azurecr.io/azure-vote-front:latest || echo "No previous cache image found"
-
+     
       - name: Build and push image
         run: |
           docker build -t azure-vote-front:${{ github.sha }} app/
