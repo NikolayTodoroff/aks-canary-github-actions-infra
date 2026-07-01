@@ -1,13 +1,13 @@
 stable:
   replicaCount: 4
   image:
-    repository: acrakscanarydev.azurecr.io/azure-vote-front
+    repository: acrakscanaryprod.azurecr.io/azure-vote-front
     tag: "stable"
 
 canary:
   replicaCount: 1
   image:
-    repository: acrakscanarydev.azurecr.io/azure-vote-front
+    repository: acrakscanaryprod.azurecr.io/azure-vote-front
     tag: "canary"
 
 rbac:
