@@ -71,3 +71,4 @@ jobs:
             --create-namespace \
             --wait \
             --timeout 3m
+            --cleanup-on-fail
