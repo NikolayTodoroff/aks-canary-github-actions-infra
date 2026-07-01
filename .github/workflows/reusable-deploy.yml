@@ -43,8 +43,11 @@ jobs:
           tenant-id: ${{ secrets.AZURE_TENANT_ID }}
           subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
 
-      - name: Install kubelogin
-        run: az aks install-cli
+      - name: Install kubectl and kubelogin
+        run: |
+          az aks install-cli \
+            --client-version v1.36.2 \
+            --kubelogin-version v0.2.19
 
       - name: Get AKS credentials
         run: |
