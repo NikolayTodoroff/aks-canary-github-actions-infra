@@ -1,7 +1,8 @@
+{{- if .Values.hpa.enabled }}
 apiVersion: autoscaling/v2
 kind: HorizontalPodAutoscaler
 metadata:
-  name: voting-app-stable
+  name: voting-app-stable-hpa
   namespace: {{ .Values.namespace }}
 spec:
   scaleTargetRef:
@@ -10,6 +11,9 @@ spec:
     name: voting-app-stable
   minReplicas: {{ .Values.hpa.minReplicas }}
   maxReplicas: {{ .Values.hpa.maxReplicas }}
+  behavior:
+    scaleDown:
+      stabilizationWindowSeconds: 300
   metrics:
     - type: Resource
       resource:
@@ -17,3 +21,4 @@ spec:
         target:
           type: Utilization
           averageUtilization: {{ .Values.hpa.cpuUtilization }}
+{{- end }}

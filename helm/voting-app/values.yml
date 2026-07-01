@@ -59,7 +59,7 @@ ingress:
   path: /
 
 hpa:
-  enabled: true
+  enabled: false
   minReplicas: 1
   maxReplicas: 6
   cpuUtilization: 70

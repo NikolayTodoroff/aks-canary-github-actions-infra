@@ -15,7 +15,11 @@ on:
       deployment-track:
         required: true
         type: string
-          
+      hpa-enabled:
+        required: false
+        type: string
+        default: "false"    
+
     secrets:
       AZURE_CLIENT_ID:
         required: true
@@ -43,8 +47,11 @@ jobs:
           tenant-id: ${{ secrets.AZURE_TENANT_ID }}
           subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
 
-      - name: Install kubelogin
-        run: az aks install-cli
+      - name: Install kubectl and kubelogin
+        run: |
+          az aks install-cli \
+            --client-version v1.36.2 \
+            --kubelogin-version v0.2.19
 
       - name: Get AKS credentials
         run: |
@@ -62,6 +69,7 @@ jobs:
           helm upgrade --install voting-app helm/voting-app \
             --values helm/voting-app/values.yml \
             --values helm/voting-app/values-${{ inputs.environment }}.yml \
+            --set hpa.enabled=${{ inputs.hpa-enabled }} \
             --set-string ${{ inputs.deployment-track }}.image.repository=${{ inputs.image-repository }} \
             --set-string ${{ inputs.deployment-track }}.image.tag=${{ inputs.image-tag }} \
             --namespace voting \
