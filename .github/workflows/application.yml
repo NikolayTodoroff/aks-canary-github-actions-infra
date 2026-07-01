@@ -54,7 +54,7 @@ jobs:
 
       - name: Build and push image
         run: |
-          docker build -t azure-vote-front:${{ github.sha }} ./app/azure-vote/azure-vote
+          docker build -t azure-vote-front:${{ github.sha }} app/
 
       - name: Tag and push to dev ACR
         run: |
