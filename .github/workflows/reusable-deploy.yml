@@ -65,8 +65,9 @@ jobs:
           helm upgrade --install voting-app helm/voting-app \
             --values helm/voting-app/values.yml \
             --values helm/voting-app/values-${{ inputs.environment }}.yml \
-            --set hpa.enabled=${{ inputs.hpa-enabled }} \
+            --set-string ${{ inputs.deployment-track }}.image.repository=${{ inputs.image-repository }} \
+            --set-string ${{ inputs.deployment-track }}.image.tag=${{ inputs.image-tag }} \
             --namespace voting \
             --create-namespace \
             --wait \
-            --timeout 10m
+            --timeout 5m
