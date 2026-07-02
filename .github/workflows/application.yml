@@ -49,7 +49,7 @@ jobs:
         run: az acr login --name acrakscanaryprod
 
       - name: Build image
-        run: docker build -t azure-vote-front:${{ github.sha }} app/azure-vote/azure-vote
+        run: docker build -t azure-vote-front:${{ github.sha }} app/
 
       - name: Tag and push to dev ACR
         run: |
