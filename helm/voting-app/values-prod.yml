@@ -1,5 +1,5 @@
 stable:
-  replicaCount: 4
+  replicaCount: 0
   image:
     repository: acrakscanaryprod.azurecr.io/azure-vote-front
 

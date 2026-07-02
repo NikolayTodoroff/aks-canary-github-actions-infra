@@ -65,12 +65,9 @@ jobs:
           helm upgrade --install voting-app helm/voting-app \
             --values helm/voting-app/values.yml \
             --values helm/voting-app/values-${{ inputs.environment }}.yml \
-            --set-string stable.image.repository=${{ inputs.image-repository }} \
-            --set-string stable.image.tag=${{ inputs.image-tag }} \
-            --set-string canary.image.repository=${{ inputs.image-repository }} \
-            --set-string canary.image.tag=${{ inputs.image-tag }} \
+            --set-string ${{ inputs.deployment-track }}.image.repository=${{ inputs.image-repository }} \
+            --set-string ${{ inputs.deployment-track }}.image.tag=${{ inputs.image-tag }} \
             --namespace voting \
             --create-namespace \
             --wait \
-            --wait-for-jobs \
             --timeout 3m 
