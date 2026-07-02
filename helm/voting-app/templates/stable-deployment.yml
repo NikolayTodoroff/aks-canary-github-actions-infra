@@ -23,7 +23,7 @@ spec:
         nodepool-type: user
       containers:
         - name: voting-app
-          image: {{ .Values.stable.image.repository }}:{{ .Values.stable.image.tag }}
+          image: {{ .Values.stable.image.repository }}:{{ .Values.stable.image.tag | default "placeholder" }}
           imagePullPolicy: Always
           ports:
             - containerPort: 80

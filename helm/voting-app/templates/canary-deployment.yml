@@ -23,7 +23,7 @@ spec:
         nodepool-type: user
       containers:
         - name: voting-app
-          image: {{ .Values.canary.image.repository }}:{{ .Values.canary.image.tag }}
+          image: {{ .Values.canary.image.repository }}:{{ .Values.canary.image.tag | default "placeholder" }}
           imagePullPolicy: Always
           ports:
             - containerPort: 80
