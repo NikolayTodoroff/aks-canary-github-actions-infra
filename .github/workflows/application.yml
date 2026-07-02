@@ -62,6 +62,7 @@ jobs:
           docker push acrakscanaryprod.azurecr.io/azure-vote-front:${{ github.sha }}
 
   setup-ingress-dev:
+    needs: build
     runs-on: ubuntu-latest
     steps:
       - name: Azure Login (OIDC)
@@ -95,6 +96,7 @@ jobs:
             --timeout 5m
 
   setup-ingress-prod:
+    needs: [build, setup-ingress-dev]
     runs-on: ubuntu-latest
     if: ${{ inputs.deploy_prod_stable || inputs.deploy_prod_canary }}
     steps:
@@ -129,7 +131,7 @@ jobs:
             --timeout 5m
 
   deploy-dev:
-    needs: [build, setup-ingress-dev]
+    needs: [build, setup-ingress-dev,setup-ingress-prod]
     uses: ./.github/workflows/reusable-deploy.yml
     with:
       environment: dev
@@ -150,7 +152,7 @@ jobs:
     secrets: inherit
 
   deploy-prod-canary:
-    needs: [build, deploy-dev, setup-ingress-prod]
+    needs: [build, deploy-dev, setup-ingress-prod,deploy-prod-stable]
     if: ${{ inputs.deploy_prod_canary }}
     uses: ./.github/workflows/reusable-deploy.yml
     with:
