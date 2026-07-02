@@ -1,7 +1,7 @@
 namespace: voting
 
 stable:
-  replicaCount: 3
+  replicaCount: 0
   version: "1.0-stable" 
   image:
     repository: acrakscanarydev.azurecr.io/azure-vote-front
@@ -14,7 +14,7 @@ stable:
       memory: 256Mi    
 
 canary:
-  replicaCount: 1
+  replicaCount: 0
   version: "1.0-canary"
   image:
     repository: acrakscanarydev.azurecr.io/azure-vote-front
