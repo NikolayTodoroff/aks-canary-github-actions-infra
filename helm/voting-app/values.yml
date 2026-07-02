@@ -39,10 +39,5 @@ ingress:
   className: nginx
   path: / 
 
-# hpa:
-#   minReplicas: 1
-#   maxReplicas: 6
-#   cpuUtilization: 70
-
 rbac:
   adminGroupObjectId: ""  

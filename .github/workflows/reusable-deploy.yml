@@ -8,14 +8,13 @@ on:
         type: string
       image-repository:
         required: true
-        type: string  
+        type: string
       image-tag:
         required: true
         type: string
       deployment-track:
         required: true
         type: string
-
     secrets:
       AZURE_CLIENT_ID:
         required: true
@@ -44,10 +43,7 @@ jobs:
           subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
 
       - name: Install kubectl and kubelogin
-        run: |
-          az aks install-cli \
-            --client-version v1.36.2 \
-            --kubelogin-version v0.2.19
+        run: az aks install-cli --client-version v1.36.2 --kubelogin-version v0.2.19
 
       - name: Get AKS credentials
         run: |
@@ -68,4 +64,4 @@ jobs:
             --namespace voting \
             --create-namespace \
             --wait \
-            --timeout 5m 
+            --timeout 5m
