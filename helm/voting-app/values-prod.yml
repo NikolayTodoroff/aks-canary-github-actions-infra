@@ -1,10 +1,10 @@
 stable:
-  replicaCount: 0
+  replicaCount: 4
   image:
     repository: acrakscanaryprod.azurecr.io/azure-vote-front
 
 canary:
-  replicaCount: 0
+  replicaCount: 1
   image:
     repository: acrakscanaryprod.azurecr.io/azure-vote-front
 

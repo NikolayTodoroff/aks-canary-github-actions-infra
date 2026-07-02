@@ -65,7 +65,6 @@ jobs:
           helm upgrade --install voting-app helm/voting-app \
             --values helm/voting-app/values.yml \
             --values helm/voting-app/values-${{ inputs.environment }}.yml \
-            --set ${{ inputs.deployment-track }}.replicaCount=1 \
             --set-string ${{ inputs.deployment-track }}.image.repository=${{ inputs.image-repository }} \
             --set-string ${{ inputs.deployment-track }}.image.tag=${{ inputs.image-tag }} \
             --namespace voting \
