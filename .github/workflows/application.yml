@@ -99,7 +99,7 @@ jobs:
           docker push acrakscanaryprod.azurecr.io/azure-vote-front:${{ github.sha }}
 
   deploy-dev:
-    needs: build
+    needs: [build, setup-ingress]
     uses: ./.github/workflows/reusable-deploy.yml
     with:
       environment: dev
