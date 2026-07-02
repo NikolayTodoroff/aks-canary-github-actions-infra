@@ -1,3 +1,4 @@
+{{- if eq .Values.track "canary" }}
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -8,7 +9,7 @@ metadata:
     track: canary
 spec:
   revisionHistoryLimit: 0
-  replicas: {{ .Values.canary.replicaCount }}
+  replicas: {{ .Values.replicaCount }}
   selector:
     matchLabels:
       app: voting-app
@@ -23,7 +24,7 @@ spec:
         nodepool-type: user
       containers:
         - name: voting-app
-          image: {{ .Values.canary.image.repository }}:{{ .Values.canary.image.tag | default "placeholder" }}
+          image: {{ .Values.image.repository }}:{{ .Values.image.tag | default "placeholder" }}
           imagePullPolicy: Always
           ports:
             - containerPort: 80
@@ -33,14 +34,14 @@ spec:
             - name: REDIS_PWD
               value: {{ .Values.redis.password | quote }}
             - name: VERSION
-              value: {{ .Values.canary.version | quote }}  
+              value: "canary"
           resources:
             requests:
-              cpu: {{ .Values.canary.resources.requests.cpu }}
-              memory: {{ .Values.canary.resources.requests.memory }}
+              cpu: {{ .Values.resources.requests.cpu }}
+              memory: {{ .Values.resources.requests.memory }}
             limits:
-              cpu: {{ .Values.canary.resources.limits.cpu }}
-              memory: {{ .Values.canary.resources.limits.memory }}
+              cpu: {{ .Values.resources.limits.cpu }}
+              memory: {{ .Values.resources.limits.memory }}
           readinessProbe:
             httpGet:
               path: /
@@ -55,3 +56,4 @@ spec:
             initialDelaySeconds: 15
             periodSeconds: 10
             failureThreshold: 3
+{{- end }}

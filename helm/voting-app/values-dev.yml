@@ -1,12 +1,4 @@
-stable:
-  replicaCount: 2
-  image:
-    repository: acrakscanarydev.azurecr.io/azure-vote-front
-
-canary:
-  replicaCount: 0
-  image:
-    repository: acrakscanarydev.azurecr.io/azure-vote-front
+replicaCount: 2
 
 rbac:
-  adminGroupObjectId: "6bafad54-4b72-4bdf-a0f0-ef624315c576"    
+  adminGroupObjectId: "6bafad54-4b72-4bdf-a0f0-ef624315c576"

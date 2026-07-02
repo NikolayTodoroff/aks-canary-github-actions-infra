@@ -1,37 +1,20 @@
 namespace: voting
 
-stable:
-  replicaCount: 0
-  version: "1.0-stable" 
-  image:
-    repository: acrakscanarydev.azurecr.io/azure-vote-front
-  resources:
-    requests:
-      cpu: 100m
-      memory: 128Mi
-    limits:
-      cpu: 250m
-      memory: 256Mi    
+image:
+  repository: ""
+  tag: ""
 
-canary:
-  replicaCount: 0
-  version: "1.0-canary"
-  image:
-    repository: acrakscanarydev.azurecr.io/azure-vote-front
-  resources:
-    requests:
-      cpu: 100m
-      memory: 128Mi
-    limits:
-      cpu: 250m
-      memory: 256Mi
+replicaCount: 1
 
-ingress-nginx:
-  enabled: true
-  controller:
-    replicaCount: 1
-    nodeSelector:
-      nodepool-type: user    
+version: "1.0"
+
+resources:
+  requests:
+    cpu: 100m
+    memory: 128Mi
+  limits:
+    cpu: 250m
+    memory: 256Mi 
 
 redis:
   image:
@@ -54,12 +37,12 @@ redis:
 ingress:
   enabled: true
   className: nginx
-  path: /
+  path: / 
 
-hpa:
-  minReplicas: 1
-  maxReplicas: 6
-  cpuUtilization: 70
+# hpa:
+#   minReplicas: 1
+#   maxReplicas: 6
+#   cpuUtilization: 70
 
 rbac:
   adminGroupObjectId: ""  
